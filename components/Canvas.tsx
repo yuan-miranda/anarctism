@@ -8,13 +8,17 @@ export default function Canvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
-        const canvas = new fabric.Canvas(canvasRef.current!, {
+        if (!canvasRef.current) return;
+
+        const canvas = new fabric.Canvas(canvasRef.current, {
             isDrawingMode: true,
+            backgroundColor: 'white',
         });
+        canvas.renderAll();
 
         const brush = new fabric.PencilBrush(canvas);
-        brush.width = 5;
-        brush.color = 'white';
+        brush.width = 2;
+        brush.color = 'black';
         canvas.freeDrawingBrush = brush;
 
         return () => {
@@ -22,5 +26,11 @@ export default function Canvas() {
         };
     }, []);
 
-    return <canvas ref={canvasRef} width={800} height={500} />;
+    return (
+        <div
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        >
+            <canvas ref={canvasRef} width={800} height={500} />
+        </div>
+    )
 }
