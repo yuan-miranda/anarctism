@@ -58,7 +58,15 @@ export default function ColorActions() {
                         20
                     </button>
 
-                    {['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff7f00', '#4b0082', '#8f00ff'].map(color => (
+                    {[
+                        '#ff0000', // Red
+                        '#ff7f00', // Orange
+                        '#ffff00', // Yellow
+                        '#00ff00', // Green
+                        '#0000ff', // Blue
+                        '#4b0082', // Indigo
+                        '#8f00ff'  // Violet
+                    ].map(color => (
                         <button
                             key={color}
                             title={color}
