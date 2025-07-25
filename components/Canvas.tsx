@@ -28,9 +28,16 @@ export default function Canvas() {
 
     return (
         <div
+            id="canvasContainer"
             className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
         >
-            <canvas ref={canvasRef} width={800} height={500} />
+            <div
+                className="border-4 border-gray-300"
+            >
+                <canvas
+                    id="canvas"
+                    ref={canvasRef} width={800} height={500} />
+            </div>
         </div>
-    )
+    );
 }
