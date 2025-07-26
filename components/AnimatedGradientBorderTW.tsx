@@ -18,7 +18,7 @@ export const AnimatedGradientBorderTW: React.FC<{
 
         const updateAnimation = () => {
             const angle =
-                (parseFloat(boxElement.style.getPropertyValue("--angle")) + 0.4) % 360;
+                (parseFloat(boxElement.style.getPropertyValue("--angle")) + 1) % 360;
             boxElement.style.setProperty("--angle", `${angle}deg`);
             requestAnimationFrame(updateAnimation);
         };
