@@ -3,9 +3,11 @@
 
 import { useEffect, useRef } from "react";
 import * as fabric from "fabric";
+import { useCanvas } from "@/context/CanvasContext";
 
 export default function Canvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const { setCanvas } = useCanvas();
 
     useEffect(() => {
         if (!canvasRef.current) return;
@@ -21,10 +23,12 @@ export default function Canvas() {
         brush.color = 'black';
         canvas.freeDrawingBrush = brush;
 
+        setCanvas(canvas);
+
         return () => {
             canvas.dispose();
         };
-    }, []);
+    }, [setCanvas]);
 
     return (
         <div

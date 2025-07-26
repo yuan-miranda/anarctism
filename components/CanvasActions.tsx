@@ -2,8 +2,25 @@
 'use client';
 
 import Image from "next/image";
+import { useCanvas } from "@/context/CanvasContext";
 
 export default function CanvasActions() {
+    const { canvas } = useCanvas();
+
+    const handleSaveCanvas = () => {
+        if (!canvas) return;
+
+        const dataURL = canvas.toDataURL({
+            format: 'png',
+            multiplier: 2, // For higher resolution
+        });
+
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = `AnarctistCanvas_${new Date().toISOString()}.png`;
+        link.click();
+    }
+
     return (
         <div
             className="fixed m-4 z-[1] top-[10px] right-[10px]"
@@ -23,6 +40,7 @@ export default function CanvasActions() {
                     id="saveCanvas"
                     title="Save Canvas"
                     className="border border-gray-300 rounded px-4 py-2 cursor-pointer"
+                    onClick={handleSaveCanvas}
                 >
                     Save Canvas
                 </button>
@@ -49,6 +67,7 @@ export default function CanvasActions() {
                     id="saveCanvasMin"
                     title="Save Canvas"
                     className="border border-gray-300 rounded p-4 cursor-pointer"
+                    onClick={handleSaveCanvas}
                 >
                     <Image
                         src="/icon/saveCanvas.svg"
