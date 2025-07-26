@@ -1,23 +1,62 @@
 // components/ColorActions.tsx
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatedGradientBorderTW } from "./AnimatedGradientBorderTW";
+import { useCanvas } from "@/context/CanvasContext";
+
+const DEFAULT_COLOR = '#000000';
+const DEFAULT_ERASER_COLOR = '#FFFFFF';
+const DEFAULT_STROKE_WIDTH = 2;
+const MAX_STROKE_WIDTH = 20;
 
 export default function ColorActions() {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [strokeWidth, setStrokeWidth] = useState(DEFAULT_STROKE_WIDTH);
+    const [color, setColor] = useState(DEFAULT_COLOR);
+    const [eraser, setEraser] = useState(false);
+    const { canvas } = useCanvas();
 
-    const toggleCollapse = () => {
+    const handleCollapseToggle = () => {
         setIsCollapsed(!isCollapsed);
     };
+
+    const handleColorChange = (newColor: string) => {
+        if (!canvas || !canvas.freeDrawingBrush) return;
+        setEraser(false);
+        setColor(newColor);
+    }
+
+    const handleEraserClick = () => {
+        if (!canvas || !canvas.freeDrawingBrush) return;
+        setEraser(true);
+        setColor(DEFAULT_ERASER_COLOR);
+    };
+
+    const handleStrokeWidthChange = (increment: boolean) => {
+        if (!canvas || !canvas.freeDrawingBrush) return;
+        const newWidth = increment ? Math.min(strokeWidth + 1, MAX_STROKE_WIDTH) : Math.max(strokeWidth - 1, 1);
+        setStrokeWidth(newWidth);
+    };
+
+    const handleCustomColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newColor = event.target.value;
+        handleColorChange(newColor);
+    };
+
+    useEffect(() => {
+        if (!canvas || !canvas.freeDrawingBrush) return;
+        canvas.freeDrawingBrush.color = color;
+        canvas.freeDrawingBrush.width = eraser ? strokeWidth * 10 : strokeWidth;
+    }, [canvas, color, strokeWidth, eraser]);
 
     return (
         <div
             className="fixed m-4 z-[1] top-1/2 left-[10px] -translate-y-1/2"
         >
             <button
-                onClick={toggleCollapse}
+                onClick={handleCollapseToggle}
                 id="toggleCollapse"
                 title="Toggle Collapse"
                 className={`w-8 h-8 border-2 border-gray-300 cursor-pointer`}
@@ -49,13 +88,15 @@ export default function ColorActions() {
                         title="Black"
                         className="w-8 h-8 border border-gray-300 cursor-pointer"
                         style={{ backgroundColor: '#000000' }}
+                        onClick={() => handleColorChange(DEFAULT_COLOR)}
                     />
                     <button
                         id="eraserStroke"
                         title="Eraser (White)"
                         className="w-8 h-8 border border-gray-300 cursor-pointer flex items-center justify-center"
+                        onClick={handleEraserClick}
                     >
-                        20
+                        {strokeWidth * 10}
                     </button>
 
                     {[
@@ -72,6 +113,7 @@ export default function ColorActions() {
                             title={color}
                             className="w-8 h-8 border border-gray-300 cursor-pointer"
                             style={{ backgroundColor: color }}
+                            onClick={() => handleColorChange(color)}
                         />
                     ))}
 
@@ -81,6 +123,8 @@ export default function ColorActions() {
                             type="color"
                             title="Custom Color"
                             className="w-[30.5667px] h-[29.5667px] border-none bg-transparent cursor-pointer"
+                            value={color}
+                            onChange={handleCustomColorChange}
                         />
                     </AnimatedGradientBorderTW>
 
@@ -88,6 +132,7 @@ export default function ColorActions() {
                         id="decreaseStrokeSize"
                         title="Decrease Stroke Width"
                         className="w-8 h-8 border border-gray-300 cursor-pointer flex items-center justify-center"
+                        onClick={() => handleStrokeWidthChange(false)}
                     >
                         <Image
                             src="/icon/decrement.svg"
@@ -101,6 +146,7 @@ export default function ColorActions() {
                         id="increaseStrokeSize"
                         title="Increase Stroke Width"
                         className="w-8 h-8 border border-gray-300 cursor-pointer flex items-center justify-center"
+                        onClick={() => handleStrokeWidthChange(true)}
                     >
                         <Image
                             src="/icon/increment.svg"
@@ -115,7 +161,7 @@ export default function ColorActions() {
                         title="Size Indicator"
                         className="w-8 h-8 border border-gray-300 cursor-pointer flex items-center justify-center"
                     >
-                        2
+                        {strokeWidth}
                     </button>
                 </div>
             )}
