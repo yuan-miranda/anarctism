@@ -3,9 +3,22 @@
 
 import Image from "next/image";
 import { useCanvas } from "@/context/CanvasContext";
+import { MIN_ZOOM } from "./ZoomActions";
 
 export default function CanvasActions() {
-    const { canvas } = useCanvas();
+    const { canvas, containerRef, setZoomLevel } = useCanvas();
+
+    const handleCenterCanvas = () => {
+        if (!canvas) return;
+        if (!containerRef.current) return;
+
+        containerRef.current.style.left = '50%';
+        containerRef.current.style.top = '50%';
+        containerRef.current.style.transform = `translate(-50%, -50%) scale(${MIN_ZOOM})`;
+
+        localStorage.setItem('canvasZoomLevel', MIN_ZOOM.toString());
+        setZoomLevel(MIN_ZOOM);
+    };
 
     const handleSaveCanvas = () => {
         if (!canvas) return;
@@ -33,6 +46,7 @@ export default function CanvasActions() {
                     id="centerCanvas"
                     title="Center Canvas"
                     className="border border-gray-300 rounded px-4 py-2 cursor-pointer"
+                    onClick={handleCenterCanvas}
                 >
                     Center Canvas
                 </button>
@@ -54,6 +68,7 @@ export default function CanvasActions() {
                     id="centerCanvasMin"
                     title="Center Canvas"
                     className="border border-gray-300 rounded p-4 cursor-pointer"
+                    onClick={handleCenterCanvas}
                 >
                     <Image
                         src="/icon/centerCanvas.svg"

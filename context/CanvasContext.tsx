@@ -1,13 +1,15 @@
 // context/CanvasContext.tsx
 'use client';
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 
 type CanvasContextType = {
     canvas: fabric.Canvas | null;
-    setCanvas: (canvas: fabric.Canvas | null) => void;
+    canvasRef: React.RefObject<HTMLCanvasElement | null>;
+    containerRef: React.RefObject<HTMLDivElement | null>;
     zoomLevel: number;
+    setCanvas: (canvas: fabric.Canvas | null) => void;
     setZoomLevel: (zoomLevel: number) => void;
 };
 
@@ -15,6 +17,8 @@ const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
 
 export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const [zoomLevel, setZoomLevel] = useState<number>(1);
 
     useEffect(() => {
@@ -25,7 +29,7 @@ export const CanvasProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }, []);
 
     return (
-        <CanvasContext.Provider value={{ canvas, setCanvas, zoomLevel, setZoomLevel }}>
+        <CanvasContext.Provider value={{ canvas, canvasRef, containerRef, zoomLevel, setCanvas, setZoomLevel }}>
             {children}
         </CanvasContext.Provider>
     );

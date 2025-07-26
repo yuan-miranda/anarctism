@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const ZOOM_STEP = 0.1;
 const MAX_ZOOM = 3;
-const MIN_ZOOM = 0.1;
+export const MIN_ZOOM = 0.1;
 
 export default function ZoomActions() {
     const { zoomLevel, setZoomLevel } = useCanvas();
