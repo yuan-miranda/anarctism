@@ -6,18 +6,14 @@ import { useCanvas } from "@/context/CanvasContext";
 import { MIN_ZOOM } from "./ZoomActions";
 
 export default function CanvasActions() {
-    const { canvas, containerRef, setZoomLevel } = useCanvas();
+    const { canvas, setZoomLevel } = useCanvas();
 
     const handleCenterCanvas = () => {
         if (!canvas) return;
-        if (!containerRef.current) return;
-
-        containerRef.current.style.left = '50%';
-        containerRef.current.style.top = '50%';
-        containerRef.current.style.transform = `translate(-50%, -50%)`;
 
         localStorage.setItem('canvasZoomLevel', MIN_ZOOM.toString());
         setZoomLevel(MIN_ZOOM);
+
     };
 
     const handleSaveCanvas = () => {

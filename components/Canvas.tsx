@@ -32,8 +32,12 @@ export default function Canvas() {
     return (
         <div
             ref={containerRef}
-            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            style={{ transform: `scale(${zoomLevel})` }}
+            style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: `translate(-50%, -50%) scale(${zoomLevel})`,
+            }}
         >
             <div
                 className="border-4 border-gray-300"
