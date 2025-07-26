@@ -14,7 +14,7 @@ export default function CanvasActions() {
 
         containerRef.current.style.left = '50%';
         containerRef.current.style.top = '50%';
-        containerRef.current.style.transform = `translate(-50%, -50%) scale(${MIN_ZOOM})`;
+        containerRef.current.style.transform = `translate(-50%, -50%)`;
 
         localStorage.setItem('canvasZoomLevel', MIN_ZOOM.toString());
         setZoomLevel(MIN_ZOOM);
