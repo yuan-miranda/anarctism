@@ -14,6 +14,7 @@ export default function CanvasActions() {
         const container = containerRef.current;
         if (!container) return;
 
+        localStorage.setItem('canvasPosition', JSON.stringify({ left: '50%', top: '50%' }));
         centerCanvas(container, MIN_ZOOM);
         setAndStoreZoomLevel(container, MIN_ZOOM, setZoomLevel);
     };
