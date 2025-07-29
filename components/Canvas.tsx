@@ -76,8 +76,8 @@ export default function Canvas() {
 
             const dx = e.clientX - dragStart.x;
             const dy = e.clientY - dragStart.y;
-            container.style.left = (containerStart.left + dx) + 'px';
-            container.style.top = (containerStart.top + dy) + 'px';
+            container.style.left = `${containerStart.left + dx}px`;
+            container.style.top = `${containerStart.top + dy}px`;
         }
 
         const onMouseUp = (e: MouseEvent) => {
@@ -190,7 +190,8 @@ export default function Canvas() {
         return () => {
             canvas.dispose();
         };
-    }, [canvasRef, setCanvas]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div
