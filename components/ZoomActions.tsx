@@ -2,6 +2,7 @@
 'use client';
 
 import { useCanvas } from "@/context/CanvasContext";
+import setAndStoreZoomLevel from "@/utils/setAndStoreZoomLevel";
 import Image from "next/image";
 
 const ZOOM_STEP = 0.1;
@@ -9,15 +10,16 @@ const MAX_ZOOM = 3;
 export const MIN_ZOOM = 0.1;
 
 export default function ZoomActions() {
-    const { zoomLevel, setZoomLevel } = useCanvas();
+    const { containerRef, zoomLevel, setZoomLevel } = useCanvas();
 
     const handleZoom = (direction: 'in' | 'out') => {
+        const container = containerRef.current;
+        if (!container) return;
+
         let newZoomLevel = zoomLevel + (direction === 'in' ? ZOOM_STEP : -ZOOM_STEP);
         newZoomLevel = Math.min(Math.max(newZoomLevel, MIN_ZOOM), MAX_ZOOM);
         newZoomLevel = Math.round(newZoomLevel * 10) / 10;
-
-        localStorage.setItem('canvasZoomLevel', newZoomLevel.toString());
-        setZoomLevel(newZoomLevel);
+        setAndStoreZoomLevel(container, newZoomLevel, setZoomLevel);
     };
 
     return (

@@ -4,16 +4,18 @@
 import Image from "next/image";
 import { useCanvas } from "@/context/CanvasContext";
 import { MIN_ZOOM } from "./ZoomActions";
+import centerCanvas from "@/utils/centerCanvas";
+import setAndStoreZoomLevel from "@/utils/setAndStoreZoomLevel";
 
 export default function CanvasActions() {
-    const { canvas, setZoomLevel } = useCanvas();
+    const { canvas, containerRef, setZoomLevel } = useCanvas();
 
     const handleCenterCanvas = () => {
-        if (!canvas) return;
+        const container = containerRef.current;
+        if (!container) return;
 
-        localStorage.setItem('canvasZoomLevel', MIN_ZOOM.toString());
-        setZoomLevel(MIN_ZOOM);
-
+        centerCanvas(container, MIN_ZOOM);
+        setAndStoreZoomLevel(container, MIN_ZOOM, setZoomLevel);
     };
 
     const handleSaveCanvas = () => {
@@ -21,7 +23,7 @@ export default function CanvasActions() {
 
         const dataURL = canvas.toDataURL({
             format: 'png',
-            multiplier: 2, // For higher resolution
+            multiplier: 2,
         });
 
         const link = document.createElement('a');

@@ -4,14 +4,33 @@
 import { useEffect } from "react";
 import * as fabric from "fabric";
 import { useCanvas } from "@/context/CanvasContext";
+import centerCanvas from "@/utils/centerCanvas";
+import { MIN_ZOOM } from "./ZoomActions";
+import setAndStoreZoomLevel from "@/utils/setAndStoreZoomLevel";
 
 export default function Canvas() {
-    const { canvasRef, containerRef, setCanvas, zoomLevel } = useCanvas();
+    const { canvasRef, containerRef, setCanvas, setZoomLevel } = useCanvas();
 
+    // load or set initial zoom level
     useEffect(() => {
-        if (!canvasRef.current) return;
+        console.log('Loading saved zoom level');
+        const container = containerRef.current;
+        if (!container) return;
 
-        const canvas = new fabric.Canvas(canvasRef.current, {
+        const storedZoomLevel = localStorage.getItem('canvasZoomLevel');
+        const newZoomLevel = storedZoomLevel ? parseFloat(storedZoomLevel) : MIN_ZOOM;
+
+        centerCanvas(container, newZoomLevel);
+        setAndStoreZoomLevel(container, newZoomLevel, setZoomLevel);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // initialize fabric canvas
+    useEffect(() => {
+        const canvasElement = canvasRef.current;
+        if (!canvasElement) return;
+
+        const canvas = new fabric.Canvas(canvasElement, {
             isDrawingMode: true,
             backgroundColor: 'white',
         });
@@ -32,11 +51,9 @@ export default function Canvas() {
     return (
         <div
             ref={containerRef}
+            id="canvas-container"
             style={{
                 position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: `translate(-50%, -50%) scale(${zoomLevel})`,
             }}
         >
             <div
