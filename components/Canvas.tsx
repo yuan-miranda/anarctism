@@ -135,7 +135,8 @@ export default function Canvas() {
             const dx = e.touches[0].clientX - panStart.x;
             const dy = e.touches[0].clientY - panStart.y;
 
-            container.style.transform = `translate(${containerStart.left + dx}px, ${containerStart.top + dy}px)`;
+            container.style.left = (containerStart.left + dx) + 'px';
+            container.style.top = (containerStart.top + dy) + 'px';
         };
 
         const onTouchEnd = (e: TouchEvent) => {
